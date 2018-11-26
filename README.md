@@ -36,7 +36,7 @@ NOTE: Due to styling issues, the project displays correctly only on larger mobil
 
 * Some functions replicated in different components, can be corrected with more time.
 
-* Some components are very similar - tried just having different classes, but wouuld cause styling to mess up
+* Some components are very similar - tried just having different classes, but would cause styling to mess up
 
 ## Further Plans
 
