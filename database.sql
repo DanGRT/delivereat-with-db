@@ -47,3 +47,31 @@ ALTER SEQUENCE orders_id_seq RESTART WITH 2 INCREMENT BY 1;
 
 INSERT INTO order_map (menu_id, quantity, orders_id) VALUES (1, 2, 1);
 INSERT INTO order_map (menu_id, quantity, orders_id) VALUES (5, 2, 1)
+
+
+-- Attempting an extra toppings menu
+
+CREATE TABLE toppings (
+  id serial,
+  name varchar(50) NOT NULL,
+  price numeric(4, 2) NOT NULL,
+  PRIMARY KEY (id)
+  )
+
+  CREATE TABLE toppings_map (
+    id serial,
+    toppings_id INT,
+    quantity INT,
+    order_map_id INT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (toppings_id) REFERENCES toppings (id),
+    FOREIGN KEY (order_map_id) REFERENCES order_map (id)
+  )
+
+INSERT INTO toppings (name, price) VALUES ('Chorizo', 2.00);
+INSERT INTO toppings (name, price) VALUES ('Cheddar', 2.00);
+INSERT INTO toppings (name, price) VALUES ('Bacon', 2.00);
+INSERT INTO toppings (name, price) VALUES ('Avocado', 2.00);
+INSERT INTO toppings (name, price) VALUES ('Caramelized Onions', 1.00);
+INSERT INTO toppings (name, price) VALUES ('Stilton', 2.00);
+INSERT INTO toppings (name, price) VALUES ('Pickles', 1.00);

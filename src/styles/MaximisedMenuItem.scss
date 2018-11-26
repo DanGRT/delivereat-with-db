@@ -1,14 +1,13 @@
-.menu-item{
+.max-menu-item{
   font-family: 'Noto Sans', sans-serif;
   position: relative;
   max-width: 100%;
-  height: 100%;
+  height: 70vh;
   list-style: none;
   background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 1rem;
   margin-bottom: 0.5rem;
   background-size: cover;
   background-position: center;
@@ -16,6 +15,7 @@
 
   border: 1px solid black;
   border-radius: 2%;
+
 
   &:after{
     display: flex;
@@ -32,21 +32,24 @@
   }
 
   &__name{
+    font-size: 2rem;
     z-index: 100;
-    margin-top: 0;
+    margin-top: 6rem;
     color: white;
+    margin-left: 1.5rem;
   }
 
   &__price-add{
     z-index: 100;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
 
 
   }
 
   &__price{
+    font-size: 2rem;
     background-color: #73db3b;
     margin-right: 1rem;
     padding: 0.5rem;
@@ -54,7 +57,7 @@
 }
 
 
-.plus-menu{
+.fa-plus-circle{
   color: #FFDA02;
   font-size: 1.5rem;
 }

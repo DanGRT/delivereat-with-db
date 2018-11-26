@@ -1,9 +1,11 @@
 import React from 'react';
 import Menu from './Menu.js'
+import MenuItem from './MenuItem.js'
 import Header from './Header.js'
 import SeeOrder from './SeeOrder.js'
 import OrderReview from './OrderReview.js'
 import OrderConfirmation from './OrderConfirmation.js'
+import MaximisedMenuItem from './MaximisedMenuItem.js'
 import '../styles/App.scss';
 
 class App extends React.Component {
@@ -17,14 +19,17 @@ class App extends React.Component {
     this.amendQuantity = this.amendQuantity.bind(this)
     this.removeFromOrder = this.removeFromOrder.bind(this)
     this.placeOrder = this.placeOrder.bind(this)
+    this.addTopping = this.addTopping.bind(this)
 
 
     this.state = {
       mostPopular: {},
       menu: {},
+      toppings: {},
       order: {},
       placedOrder: {},
-      display: 'menu' ///'menu' or 'order' or 'confirmation'
+      viewing: {},
+      display: 'menu' ///'menu' or 'order' or 'confirmation' or 'maximised'
     }
 
 
@@ -49,9 +54,11 @@ class App extends React.Component {
         console.log(body)
         const menuObject = this.arrayToObject(body[0])
         const popularObject = this.arrayToObject(body[1])
+        const toppings = this.arrayToObject(body[2])
         this.setState({
           menu: menuObject,
-          mostPopular: popularObject
+          mostPopular: popularObject,
+          toppings
         })
       })
       console.log
@@ -77,12 +84,13 @@ class App extends React.Component {
   }
 
 
-  addToOrder(menuItem, quantity){
+  addToOrder(menuItem, toppings, quantity){
     if (!this.state.order[menuItem.id]){
       const orderItem = {
         [menuItem.id]: {
           id: menuItem.id,
-          quantity
+          quantity,
+          toppings
         }
       }
       this.setState({
@@ -110,32 +118,66 @@ class App extends React.Component {
     })
   }
 
+
   calculateTotal(){
     const total = Object.values(this.state.order).reduce((acc, item) => {
-      return acc + (item.quantity * this.state.menu[item.id].price)
+      let toppingsPrice = 0
+      if (item.toppings.length){
+         toppingsPrice = item.toppings.reduce((acc, item) => {
+          return acc + (item.quantity * this.state.toppings[item.toppingId].price)
+        }, 0)
+    }
+      return acc + (item.quantity * this.state.menu[item.id].price + toppingsPrice)
     }, 0)
-    return total.toFixed(2)
+     return total.toFixed(2)
 
   }
 
-  changeDisplay(display){
+  changeDisplay(display, menuItem = null){
+    display === 'maximised'
+    ? (this.setState({
+      display,
+      viewing: {baseItem: menuItem,
+                toppings: []}
+    }))
+    : (this.setState({
+      display,
+      viewing: {}
+    }))
+  }
+
+  addTopping(baseItem, toppingItem){
+    const itemWithToppings = {
+      baseItem: this.state.viewing.baseItem,
+      toppings: this.state.viewing.toppings.concat({toppingId: toppingItem.id, quantity: 1})
+    }
     this.setState({
-      display
+      viewing: itemWithToppings
     })
   }
 
   render(){
     return (
       <div>
-      <Header changeDisplay={this.changeDisplay} />
+      {this.state.display !== 'maximised'
+        ? <Header changeDisplay={this.changeDisplay} />
+        : null
+      }
+
         {this.state.display === 'menu'
-          ? <Menu addToOrder={this.addToOrder} menu={this.state.menu} mostPopular={this.state.mostPopular}/>
+          ? <Menu addToOrder={this.addToOrder} menu={this.state.menu} mostPopular={this.state.mostPopular} changeDisplay={this.changeDisplay}/>
+          : null
+        }
+
+        {this.state.display === 'maximised'
+          ? <MaximisedMenuItem maximised={true} viewing={this.state.viewing} toppings={this.state.toppings} addTopping={this.addTopping} addToOrder={this.addToOrder}/>
           : null
         }
 
         {this.state.display === 'order'
           ? <OrderReview menu={this.state.menu}
                          order={this.state.order}
+                         toppings={this.state.toppings}
                          amendQuantity={this.amendQuantity}
                          calculateTotal={this.calculateTotal}
                          removeFromOrder={this.removeFromOrder}
@@ -150,7 +192,7 @@ class App extends React.Component {
 
 
 
-        {Object.values(this.state.order).length && this.state.display === 'menu'
+        {Object.values(this.state.order).length && this.state.display === 'maximised'
           ? <SeeOrder changeDisplay={this.changeDisplay} calculateTotal={this.calculateTotal}/>
           : null
         }

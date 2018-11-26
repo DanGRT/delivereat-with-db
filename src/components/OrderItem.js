@@ -23,7 +23,14 @@ class OrderItem extends React.Component{
   }
 
   calculatePrice(){
-     return (this.props.item.price * this.props.quantity).toFixed(2)
+     const basePrice = Number(this.props.menuItem.price * this.props.item.quantity)
+     let toppingsPrice = 0
+     if (this.props.item.toppings.length > 0){
+        toppingsPrice = this.props.item.toppings.reduce((acc, item) => {
+         return acc + item.quantity * this.props.toppings[item.toppingId].price
+       }, 0)
+     }
+     return basePrice + toppingsPrice
   }
 
 
@@ -31,9 +38,20 @@ class OrderItem extends React.Component{
   render(){
     return (
       <div>
-        <span>{this.props.item.name}</span>
+        <span>{this.props.menuItem.name}</span>
+
+        <div className="order-item__ingredients">
+          With: {this.props.item.toppings.length
+          ? ( this.props.item.toppings.map(item => {
+            return <span className="order-item__ingredients-indi" key={item.toppingId}>{this.props.toppings[item.toppingId].name}</span>
+          }))
+          : null
+
+      }
+      </div>
+
         <input onChange={this.handleChange} type="number" name="quantity" placeholder={this.props.quantity} min="1" max="5" />
-        <span>£{this.calculatePrice()}</span>
+        <span>£{this.calculatePrice().toFixed(2)}</span>
         <button onClick={this.handleRemove}>Remove</button>
       </div>
 
