@@ -2,11 +2,22 @@
 
 Repeat of Delivereat project with database.
 
+Weekend project for Constructor Labs
 
-This Readme is regarding experimental branch, which is more fully featured, but currently quite buggy. The master branch does not have burger customisation features.
 
-NOTE: Due to styling issues, the project displays correctly only on larger mobile screens. (iPhone 6/7/8 Plus, iPhone X etc.). I have tried to rectify this but completely clueless as to what causes the menu to shrink and elements overlap each other.
+## Running from source
 
+- Clone this repo.
+- Run `npm install` to install dependencies.
+- Create a `.env` file to store your database credentials.
+- Create a local database using the supplied queries in [database.sql](database.sql).
+- Run `npm start` to to run the Node server with Nodemon.
+- Run `npm run dev` to create a development build with webpack.
+S
+- This app was built with mobile-use in mind, it is advised that browser dev tools are used to replicate this.
+
+
+NOTE: Due to styling issues, the project displays correctly only on larger mobile screens. (iPhone 6/7/8 Plus, iPhone X etc.). I aim to correct this as soon as possible.
 
 ## Features:
 
